@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use DB;
+use Exception;
 
-class Medical extends Model
+class Medicals extends Model
 {
     use SoftDeletes;
 
@@ -29,7 +31,10 @@ class Medical extends Model
             $query = str_replace('?', "'?'", $query->toSql());
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
-            $query = $query->get();
+            $query = $query->get()->toArray();
+            if (empty($query)) {
+                $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => 'Registries not found'];
+            }
         }
 
         return $query;
@@ -51,7 +56,10 @@ class Medical extends Model
             $query = str_replace('?', "'?'", $query->toSql());
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
-            $query = $query->get();
+            $query = $query->get()->toArray();
+            if (empty($query)) {
+                $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => 'Registries not found'];
+            }
         }
 
         return $query;
@@ -67,6 +75,9 @@ class Medical extends Model
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
             $query = $query->first();
+            if (is_null($query)) {
+                $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => 'Registry not found'];
+            }
         }
 
         return $query;
@@ -86,10 +97,19 @@ class Medical extends Model
             $query = str_replace('?', "'?'", $query->toSql());
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
-            $query->save();
-            if (isset($query->id)) {
-                // Save data in Pivot Medicals x Specialties
-                $query->medicals_specialties()->sync($medicals_specialties);
+            DB::beginTransaction();
+            try {
+                // Save medicals data
+                $query->save();
+                if (isset($query->id)) {
+                    // Save data in Pivot Medicals x Specialties
+                    $query->medicals_specialties()->sync($medicals_specialties);
+                }
+                DB::commit();
+            } catch (Exception $e) {
+                DB::rollback();
+                $this->refreshDB();
+                $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => $e->errorInfo];
             }
         }
 
@@ -104,9 +124,21 @@ class Medical extends Model
             $query = str_replace('?', "'?'", $query->toSql());
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
-            $query = $query->delete();
+            if (!is_null($query)) {
+                $query->delete();
+            } else {
+                $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => 'Registry to delete not found'];
+            }
         }
 
         return $query;
+    }
+
+    public function refreshDB()
+    {
+        $maxM = DB::table('medicals')->max('id') + 1;
+        $maxMXS = DB::table('medicals_x_specialties')->max('id') + 1;
+        DB::statement("ALTER TABLE medicals AUTO_INCREMENT =  $maxM");
+        DB::statement("ALTER TABLE medicals_x_specialties AUTO_INCREMENT =  $maxMXS");
     }
 }

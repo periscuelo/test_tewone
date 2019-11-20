@@ -18,6 +18,7 @@ class CreateSpecialtiesTable extends Migration
             $table->string('specialty', 100);
             $table->timestamps();
             $table->softDeletes();
+            $table->unique('specialty');
         });
     }
 

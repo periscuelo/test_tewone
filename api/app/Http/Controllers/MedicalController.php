@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Medical;
+use App\Models\Medicals;
 
 class MedicalController extends Controller
 {
@@ -15,10 +15,10 @@ class MedicalController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  Medical  $medicals
+     * @param  Medicals  $medicals
      * @return void
      */
-    public function __construct(Medical $medicals)
+    public function __construct(Medicals $medicals)
     {
         $this->medicals = $medicals;
     }
@@ -32,7 +32,7 @@ class MedicalController extends Controller
      */
     public function index()
     {
-        return $this->medicals->getMedicals();
+        return response()->json($this->medicals->getMedicals(), 200);
     }
 
     /**
@@ -46,7 +46,7 @@ class MedicalController extends Controller
      */
     public function search($search)
     {
-        return $this->medicals->getMedical($search);
+        return response()->json($this->medicals->getMedical($search), 200);
     }
 
     /**
@@ -60,7 +60,7 @@ class MedicalController extends Controller
      */
     public function edit($id)
     {
-        return $this->medicals->getMedicalById($id);
+        return response()->json($this->medicals->getMedicalById($id), 200);
     }
 
     /**
@@ -77,10 +77,10 @@ class MedicalController extends Controller
     {
         // Validate fields
         $this->validate($request, [
-            'name' => 'required|string|max:150',
-            'crm' => 'required|integer',
-            'phone' => 'required|string|max:11',
-            'medicals_specialties' => 'required|array|min:2'
+            'name' => 'string|max:150',
+            'crm' => 'integer|unique:medicals',
+            'phone' => 'string|max:11',
+            'medicals_specialties' => 'array|min:2'
         ]);
 
         $data = $request->all();
@@ -102,7 +102,7 @@ class MedicalController extends Controller
         // Validate fields
         $this->validate($request, [
             'name' => 'required|string|max:150',
-            'crm' => 'required|integer',
+            'crm' => 'required|integer|unique:medicals',
             'phone' => 'required|string|max:11',
             'medicals_specialties' => 'required|array|min:2'
         ]);
@@ -123,7 +123,11 @@ class MedicalController extends Controller
      */
     public function destroy($id)
     {
-        $this->medicals->removeMedical($id);
-        return response()->json(null, 204);
+        $return = $this->medicals->removeMedical($id);
+        if (empty($return)) {
+            return response()->json(null, 204);
+        } else {
+            return response()->json($return, 422);
+        }
     }
 }

@@ -20,6 +20,7 @@ class CreateMedicalsTable extends Migration
             $table->string('phone', 11);
             $table->timestamps();
             $table->softDeletes();
+            $table->unique('crm');
         });
     }
 
