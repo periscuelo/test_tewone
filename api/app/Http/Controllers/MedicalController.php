@@ -75,8 +75,17 @@ class MedicalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $return = $this->medicals->setMedical($request, $id);
-        return  response()->json($return, 201);
+        // Validate fields
+        $this->validate($request, [
+            'name' => 'required|string|max:150',
+            'crm' => 'required|integer',
+            'phone' => 'required|string|max:11',
+            'medicals_specialties' => 'required|array|min:2'
+        ]);
+
+        $data = $request->all();
+        $return = $this->medicals->setMedical($data, $id);
+        return response()->json($return, 201);
     }
 
     /**
@@ -90,7 +99,16 @@ class MedicalController extends Controller
      */
     public function store(Request $request)
     {
-        $return = $this->medicals->setMedical($request);
+        // Validate fields
+        $this->validate($request, [
+            'name' => 'required|string|max:150',
+            'crm' => 'required|integer',
+            'phone' => 'required|string|max:11',
+            'medicals_specialties' => 'required|array|min:2'
+        ]);
+
+        $data = $request->all();
+        $return = $this->medicals->setMedical($data);
         return response()->json($return, 201);
     }
 

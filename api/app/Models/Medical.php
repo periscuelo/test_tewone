@@ -15,14 +15,14 @@ class Medical extends Model
         'phone'
     ];
 
-    public function medical_specialties()
+    public function medicals_specialties()
     {
-        return $this->belongsToMany(Specialties::class, 'medical_x_specialties', 'id_medical', 'id_specialty')
+        return $this->belongsToMany(Specialties::class, 'medicals_x_specialties', 'id_medical', 'id_specialty')
                     ->withTimestamps();
     }
 
     public function getMedicals($debug=false) {
-        $query = $this->with('medical_specialties');
+        $query = $this->with('medicals_specialties');
 
         if ($debug) {
             $bindings = $query->getBindings();
@@ -36,7 +36,7 @@ class Medical extends Model
     }
 
     public function getMedical($search, $debug=false) {
-        $query = $this->with('medical_specialties');
+        $query = $this->with('medicals_specialties');
 
         $query = $query->where(function($query) use($search) {
             if (!empty($search)) {
@@ -58,7 +58,7 @@ class Medical extends Model
     }
 
     public function getMedicalById($id, $debug=false) {
-        $query = $this->with('medical_specialties')
+        $query = $this->with('medicals_specialties')
                       ->where('id', $id);
 
         if ($debug) {
@@ -73,39 +73,23 @@ class Medical extends Model
     }
 
     public function setMedical($request, $id=0, $debug=false) {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:150',
-            'crm' => 'required|integer',
-            'phone' => 'required|string|max:11',
-            'medical_specialties' => 'required|array|min:2'
-        ]);
+        $query = $this->firstOrNew(['id' => $id]);
+        $medicals_specialties = $request['medicals_specialties'];
+        unset($request['medicals_specialties']);
 
-        // Validate fields
-        if ($validatedData->fails()) {
-            $query = ['errors' => $validatedData];
+        foreach($request AS $key => $value) {
+            $query->{$key} = $value;
+        }
+
+        if ($debug) {
+            $bindings = $query->getBindings();
+            $query = str_replace('?', "'?'", $query->toSql());
+            $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
-            $query = $this->firstOrNew(['id' => $id]);
-            $medical_specialties = (!empty($request['medical_specialties'])) ? json_decode($request['medical_specialties']) : '';
-            unset($request['medical_specialties']);
-
-            foreach($request AS $key => $value) {
-                $query->{$key} = $value;
-            }
-
-            if ($debug) {
-                $bindings = $query->getBindings();
-                $query = str_replace('?', "'?'", $query->toSql());
-                $query = vsprintf(str_replace('?', '%s', $query), $bindings);
-            } else {
-                $query->save();
-                if (isset($query->id)) {
-                    // Save data in Pivot Medical x Specialties
-                    $query = $this->updatePivots($medical_specialties, $query, 'medical_specialties', 'id_medical', 'id_specialty');
-
-                    $query = $query->id;
-                } else {
-                    $query = 0;
-                }
+            $query->save();
+            if (isset($query->id)) {
+                // Save data in Pivot Medicals x Specialties
+                $query->medicals_specialties()->sync($medicals_specialties);
             }
         }
 

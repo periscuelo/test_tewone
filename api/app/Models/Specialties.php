@@ -13,9 +13,9 @@ class Specialties extends Model
         'specialty'
     ];
 
-    public function medical_specialties()
+    public function medicals_specialties()
     {
-        return $this->belongsToMany(Medical::class, 'medical_x_specialties', 'id_specialty', 'id_medical')
+        return $this->belongsToMany(Medical::class, 'medicals_x_specialties', 'id_specialty', 'id_medical')
                     ->withTimestamps();
     }
 }
