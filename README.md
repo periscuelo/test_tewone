@@ -7,8 +7,8 @@ and images as you want.
 If don't, you can follow these instructions.
 ```
 
-All files below need to be in same folder.
-One folder named htdocs need to be created.
+All files below need to be in same folder.  
+One folder named htdocs need to be created.  
 One folder named mysql need to be created too.
 
 ## docker-compose.yml
