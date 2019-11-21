@@ -125,7 +125,7 @@ class Medicals extends Model
             $query = vsprintf(str_replace('?', '%s', $query), $bindings);
         } else {
             if (!is_null($query)) {
-                $query->delete();
+                $query = $query->delete();
             } else {
                 $query = ['status'=> 'Houston, we\'ve had a problem', 'info' => 'Registry to delete not found'];
             }

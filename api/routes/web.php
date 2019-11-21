@@ -15,8 +15,8 @@ $router->get('/', function() {
     return 'It\'s a test API. Login or has a Token is no needed';
 });
 
-$router->get('/medical', 'MedicalController@index');
-$router->get('/medical/{search}/search', 'MedicalController@search');
+$router->get('/medicals', 'MedicalController@index');
+$router->get('/medicals/search', 'MedicalController@search');
 $router->get('/medical/{id}/edit', 'MedicalController@edit');
 $router->put('/medical/{id}', 'MedicalController@update');
 $router->post('/medical', 'MedicalController@store');

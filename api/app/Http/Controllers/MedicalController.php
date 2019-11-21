@@ -32,7 +32,9 @@ class MedicalController extends Controller
      */
     public function index()
     {
-        return response()->json($this->medicals->getMedicals(), 200);
+        $return = $this->medicals->getMedicals();
+        $status = (!array_key_exists('status', $return)) ? 200 : 422;
+        return response()->json($return, $status);
     }
 
     /**
@@ -40,13 +42,15 @@ class MedicalController extends Controller
      *
      * Get the medical data of one specific filter
      *
-     * @param  mixed $search
+     * @param  Request $request->search
      *
      * @return Response
      */
-    public function search($search)
+    public function search(Request $request)
     {
-        return response()->json($this->medicals->getMedical($search), 200);
+        $return = $this->medicals->getMedical($request->search);
+        $status = (!array_key_exists('status', $return)) ? 200 : 422;
+        return response()->json($return, $status);
     }
 
     /**
@@ -60,7 +64,9 @@ class MedicalController extends Controller
      */
     public function edit($id)
     {
-        return response()->json($this->medicals->getMedicalById($id), 200);
+        $return = $this->medicals->getMedicalById($id);
+        $status = (!array_key_exists('status', $return)) ? 200 : 422;
+        return response()->json($return, $status);
     }
 
     /**
@@ -79,13 +85,14 @@ class MedicalController extends Controller
         $this->validate($request, [
             'name' => 'string|max:150',
             'crm' => 'integer|unique:medicals',
-            'phone' => 'string|max:11',
+            'phone' => 'string|between:10,11',
             'medicals_specialties' => 'array|min:2'
         ]);
 
         $data = $request->all();
         $return = $this->medicals->setMedical($data, $id);
-        return response()->json($return, 201);
+        $status = (!array_key_exists('status', $return)) ? 201 : 422;
+        return response()->json($return, $status);
     }
 
     /**
@@ -103,13 +110,14 @@ class MedicalController extends Controller
         $this->validate($request, [
             'name' => 'required|string|max:150',
             'crm' => 'required|integer|unique:medicals',
-            'phone' => 'required|string|max:11',
+            'phone' => 'required|string|between:10,11',
             'medicals_specialties' => 'required|array|min:2'
         ]);
 
         $data = $request->all();
         $return = $this->medicals->setMedical($data);
-        return response()->json($return, 201);
+        $status = (!array_key_exists('status', $return)) ? 201 : 422;
+        return response()->json($return, $status);
     }
 
     /**
@@ -124,10 +132,7 @@ class MedicalController extends Controller
     public function destroy($id)
     {
         $return = $this->medicals->removeMedical($id);
-        if (empty($return)) {
-            return response()->json(null, 204);
-        } else {
-            return response()->json($return, 422);
-        }
+        $status = ($return === true) ? 204 : 422;
+        return response()->json($return, $status);
     }
 }
