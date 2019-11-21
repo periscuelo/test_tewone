@@ -123,6 +123,9 @@ If you need more help with `docker`, the `docker` docummentation can help you.
 Inside docker api folder use:
 composer install
 composer global require phpunit/phpunit
+php artisan db:create
+php artisan migrate
+php artisan db:seed
 ```
 
 ## Unit Tests
