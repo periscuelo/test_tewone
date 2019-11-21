@@ -8,7 +8,8 @@ If don't, you can follow these instructions.
 ```
 
 All files below need to be in same folder.
-One folder named htdocs need to be created too.
+One folder named htdocs need to be created.
+One folder named mysql need to be created too.
 
 ## docker-compose.yml
 
@@ -59,7 +60,7 @@ services:
     MYSQL_ROOT_PASSWORD: root
     volumes:
       - ./my.cnf:/etc/mysql/conf.d/my.cnf #this line only needed in dockertoolbox
-      - ../mysql:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
 ```
 
 ## php.ini
