@@ -102,12 +102,12 @@ innodb_use_native_aio=0
 
 ## Observations
 
-Inside htdocs folder, do the `$ git clone` of project.
+Inside htdocs folder, do the `$ git clone` of project.  
 After, in this folder with all these files ans the folder htdocs, you need run a command:
 
 `$ docker-compose up -d`
 
-You should connect in the PHP container for install the API like will be explained below.
+You should connect in the PHP container for install the API like will be explained below.  
 If you need more help with `docker`, the `docker` docummentation can help you.
 
 [https://docs.docker.com/](https://docs.docker.com/)
