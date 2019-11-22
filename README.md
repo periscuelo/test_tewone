@@ -128,6 +128,35 @@ php artisan migrate
 php artisan db:seed
 ```
 
+## .env file
+
+Rename your .env.example to .env  
+Use the example below
+
+```
+APP_NAME=API
+APP_ENV=local
+APP_KEY=putyourkeyhere
+APP_DEBUG=true
+APP_URL=http://localhost:8080
+APP_TIMEZONE=America/Sao_Paulo
+
+LOG_CHANNEL=stack
+LOG_SLACK_WEBHOOK_URL=
+
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=tewone
+DB_USERNAME=root
+DB_PASSWORD=root
+DB_CHARSET=utf8mb4
+DB_COLLATION=utf8mb4_general_ci
+
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+```
+
 ## Unit Tests
 
 After install, run command below
