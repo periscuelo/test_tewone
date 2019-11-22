@@ -25,8 +25,8 @@ services:
     stdin_open: true
     tty: true
     environment:
-    CHOKIDAR_USEPOLLING: 'true'
-    CHOKIDAR_INTERVAL: 300
+      CHOKIDAR_USEPOLLING: 'true'
+      CHOKIDAR_INTERVAL: 300
     ports:
       - 8000:8000
     volumes:
@@ -54,10 +54,10 @@ services:
     restart: always
     stdin_open: true
     tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - 3306:3306
-    environment:
-    MYSQL_ROOT_PASSWORD: root
     volumes:
       - ./my.cnf:/etc/mysql/conf.d/my.cnf #this line only needed in dockertoolbox
       - ./mysql:/var/lib/mysql
