@@ -29,6 +29,7 @@ services:
       CHOKIDAR_INTERVAL: 300
     ports:
       - 8000:8000
+      - 8080:8080
     volumes:
       - ./htdocs/test_tewone:/data/app
       - /data/app/node_modules
@@ -40,7 +41,7 @@ services:
     stdin_open: true
     tty: true
     ports:
-      - 8080:80
+      - 80:80
       - 443:443
     volumes:
       - ./htdocs:/var/www/html
