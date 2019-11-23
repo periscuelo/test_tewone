@@ -1,0 +1,3 @@
+/* eslint-disable */
+export const CHANGE_MEDICAL_DATA = 'CHANGE_MEDICAL_DATA';
+export const CHANGE_SPECIALTY_DATA = 'CHANGE_SPECIALTY_DATA';
