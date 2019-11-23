@@ -153,7 +153,6 @@ QUEUE_CONNECTION=sync
 ```
 Inside docker terminal, in api folder use:
 composer install
-composer global require phpunit/phpunit
 php artisan db:create
 php artisan migrate
 php artisan db:seed
