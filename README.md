@@ -121,6 +121,7 @@ If you need more help with `docker`, the `docker` docummentation can help you.
 ## .env file
 
 Rename your .env.example to .env  
+Generate your APP_KEY to use in .env  
 Use the example below
 
 ```
