@@ -118,16 +118,6 @@ If you need more help with `docker`, the `docker` docummentation can help you.
 
 # API
 
-## Install
-```
-Inside docker api folder use:
-composer install
-composer global require phpunit/phpunit
-php artisan db:create
-php artisan migrate
-php artisan db:seed
-```
-
 ## .env file
 
 Rename your .env.example to .env  
@@ -155,6 +145,16 @@ DB_COLLATION=utf8mb4_general_ci
 
 CACHE_DRIVER=file
 QUEUE_CONNECTION=sync
+```
+
+## Install
+```
+Inside docker api folder use:
+composer install
+composer global require phpunit/phpunit
+php artisan db:create
+php artisan migrate
+php artisan db:seed
 ```
 
 ## Unit Tests
