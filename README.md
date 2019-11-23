@@ -130,7 +130,7 @@ APP_NAME=API
 APP_ENV=local
 APP_KEY=putyourkeyhere
 APP_DEBUG=true
-APP_URL=http://localhost:8080
+APP_URL=http://localhost
 APP_TIMEZONE=America/Sao_Paulo
 
 LOG_CHANNEL=stack
@@ -167,4 +167,4 @@ After install, run command below
 
 ## URL to Access
 
-`http://localhost:8080`
+`http://localhost`
