@@ -151,7 +151,7 @@ QUEUE_CONNECTION=sync
 
 ## Install
 ```
-Inside docker api folder use:
+Inside docker terminal, in api folder use:
 composer install
 composer global require phpunit/phpunit
 php artisan db:create
@@ -168,3 +168,33 @@ After install, run command below
 ## URL to Access
 
 `http://localhost`
+
+# APP
+
+## Project setup
+```
+Inside docker terminal, in app folder use:
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+Inside docker terminal, in app folder use:
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+Inside docker terminal, in app folder use:
+npm run build
+```
+
+## URL to Access Vue UI
+
+`http://localhost:8000`
+
+
+## URL to Access
+
+`http://localhost:8080`
+
