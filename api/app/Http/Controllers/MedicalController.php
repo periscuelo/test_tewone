@@ -84,7 +84,7 @@ class MedicalController extends Controller
         // Validate fields
         $this->validate($request, [
             'name' => 'string|max:150',
-            'crm' => 'integer|unique:medicals',
+            'crm' => 'integer',
             'phone' => 'string|between:10,11',
             'medicals_specialties' => 'array|min:2'
         ]);
