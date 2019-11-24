@@ -30,7 +30,9 @@
           <label for="search">Search:</label>
           <b-form-input
             id="search"
+            v-model="search"
             placeholder="Enter Search"
+            debounce="1000"
           >
           </b-form-input>
         </p>
@@ -40,7 +42,8 @@
       <b-col>
         <b-table
           id="my-table"
-          :items="items"
+          :items="gridMedical"
+          :fields="fields"
           :per-page="perPage"
           :current-page="currentPage"
           responsive
@@ -50,11 +53,16 @@
             <b-button
               variant="outline-primary"
               class="mr-1"
-              v-b-modal.modal-1
+              @click="edit(data.item.id)"
             >
               Edit
             </b-button>
-            <b-button variant="outline-danger">Delete</b-button>
+            <b-button
+              variant="outline-danger"
+              @click="remove(data.item.id)"
+            >
+              Delete
+            </b-button>
           </template>
         </b-table>
       </b-col>
@@ -64,6 +72,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Modal from '@/components/Modal.vue';
 
 export default {
@@ -75,40 +84,46 @@ export default {
     return {
       perPage: 3,
       currentPage: 1,
-      items: [
-        {
-          medical: 'Fred', crm: 'Flintstone', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Wilma', crm: 'Flintstone', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Barney', crm: 'Rubble', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Betty', crm: 'Rubble', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Pebbles', crm: 'Flintstone', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Bamm Bamm', crm: 'Rubble', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'The Great', crm: 'Gazzoo', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Rockhead', crm: 'Slate', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
-        {
-          medical: 'Pearl', crm: 'Slaghoople', phone: 'Flintstone', specialties: 'Flintstone', actions: '',
-        },
+      fields: [
+        { key: 'id', label: '#' },
+        { key: 'name', label: 'Medical' },
+        { key: 'crm', label: 'CRM' },
+        { key: 'phone' },
+        { key: 'specialties' },
+        { key: 'actions' },
       ],
+      search: '',
     };
   },
   computed: {
+    ...mapGetters('Medicals', ['gridMedical']),
     rows() {
-      return this.items.length;
+      return this.gridMedical.length;
+    },
+  },
+  watch: {
+    search(value) {
+      if (value !== '') {
+        this.searchMedical(value);
+      } else {
+        this.getMedicals();
+      }
+    },
+  },
+  created() {
+    this.getMedicals();
+  },
+  methods: {
+    ...mapActions('Medicals', ['getMedicals', 'getMedical', 'removeMedical', 'searchMedical']),
+    edit(id) {
+      this.getMedical(id);
+      this.$bvModal.show('modal-1');
+    },
+    remove(id) {
+      // Sorry eslint, this is a test app and i need to be hurry :/
+      /* eslint-disable */
+      if (confirm('Do you really want to delete this record?')) this.removeMedical(id);
+      /* eslint-enable */
     },
   },
 };

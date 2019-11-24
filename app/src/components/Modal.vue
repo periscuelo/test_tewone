@@ -64,14 +64,14 @@
       >
         <b-form-select
           id="input-4"
-          v-model="$v.specialties.$model"
+          v-model="$v.medicals_specialties.$model"
           :options="optsSpecialty"
           :select-size="4"
-          :state="$v.specialties.$dirty ? !$v.specialties.$error : null"
+          :state="$v.medicals_specialties.$dirty ? !$v.medicals_specialties.$error : null"
           multiple
         ></b-form-select>
         <div class="mt-3">
-          Specialties Selected: <strong>{{ specialties }}</strong>
+          Specialties Selected: <strong>{{ medicals_specialties }}</strong>
         </div>
 
         <b-form-invalid-feedback id="input-4-live-feedback">
@@ -103,7 +103,7 @@ export default {
       name: '',
       crm: '',
       phone: '',
-      specialties: [],
+      medicals_specialties: [],
     };
   },
   validations: {
@@ -118,13 +118,19 @@ export default {
       required,
       minLength: minLength(14),
     },
-    specialties: {
+    medicals_specialties: {
       required,
       minLength: minLength(2),
     },
   },
   computed: {
+    ...mapGetters('Medicals', ['medical']),
     ...mapGetters('Specialties', ['optsSpecialty']),
+  },
+  watch: {
+    medical(value) {
+      if (value.id !== undefined) Object.assign(this.$data, value);
+    },
   },
   created() {
     this.$v.$touch();
@@ -132,12 +138,19 @@ export default {
   },
   methods: {
     ...mapActions('Specialties', ['getSpecialties']),
+    ...mapActions('Medicals', ['setMedical', 'updateMedical']),
     cancel() {
       Object.assign(this.$data, this.$options.data.apply(this));
     },
     save() {
       if (!this.$v.$anyError) {
-        // Submit Logic
+        const saveData = Object.assign({}, this.$data);
+        saveData.phone = saveData.phone.replace(/[^0-9]/g, '');
+        if (saveData.id !== undefined) {
+          this.updateMedical(saveData);
+        } else {
+          this.setMedical(saveData);
+        }
         Object.assign(this.$data, this.$options.data.apply(this));
       }
     },
