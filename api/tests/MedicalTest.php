@@ -233,7 +233,6 @@ class MedicalTest extends TestCase
         $data = [
             ['phone' => '112455658'],
             ['medicals_specialties' => [1]],
-            ['crm' =>'123456'],
             ['crm' =>'aaaa'],
             ['name' => 'Fulano da Silva SFulano da Silva SFulano da Silva SFulano da Silva SFulano da Silva SFulano da Silva SFulano da Silva SFulano da SilvaFulano da SilvaFulano da Silva'],
             ['phone' => 1124556587]
@@ -260,16 +259,10 @@ class MedicalTest extends TestCase
         $this->put('/medical/2', $data[3]);
         $this->seeStatusCode(422);
         $this->seeJsonStructure([
-            'crm'
-        ]);
-
-        $this->put('/medical/2', $data[4]);
-        $this->seeStatusCode(422);
-        $this->seeJsonStructure([
             'name'
         ]);
 
-        $this->put('/medical/2', $data[5]);
+        $this->put('/medical/2', $data[4]);
         $this->seeStatusCode(422);
         $this->seeJsonStructure([
             'phone'
