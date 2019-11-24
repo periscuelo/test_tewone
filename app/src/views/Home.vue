@@ -26,6 +26,15 @@
         >
           Register
         </b-button>
+        <b-alert
+          :show="dismissCountDown"
+          dismissible
+          fade
+          variant="danger"
+          @dismiss-count-down="countDownChanged"
+        >
+          {{ error.replace(/\d/g,'') }}
+        </b-alert>
         <p>
           <label for="search">Search:</label>
           <b-form-input
@@ -72,7 +81,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import Modal from '@/components/Modal.vue';
 
 export default {
@@ -93,15 +102,21 @@ export default {
         { key: 'actions' },
       ],
       search: '',
+      dismissSecs: 5,
+      dismissCountDown: 0,
     };
   },
   computed: {
+    ...mapState('Medicals', ['error']),
     ...mapGetters('Medicals', ['gridMedical']),
     rows() {
       return this.gridMedical.length;
     },
   },
   watch: {
+    error(value) {
+      if (value !== '') this.showAlert();
+    },
     search(value) {
       if (value !== '') {
         this.searchMedical(value);
@@ -115,6 +130,9 @@ export default {
   },
   methods: {
     ...mapActions('Medicals', ['getMedicals', 'getMedical', 'removeMedical', 'searchMedical']),
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
     edit(id) {
       this.getMedical(id);
       this.$bvModal.show('modal-1');
@@ -124,6 +142,9 @@ export default {
       /* eslint-disable */
       if (confirm('Do you really want to delete this record?')) this.removeMedical(id);
       /* eslint-enable */
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs;
     },
   },
 };

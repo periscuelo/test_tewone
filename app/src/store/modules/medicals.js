@@ -1,4 +1,4 @@
-import { CHANGE_MEDICALS_DATA, CHANGE_MEDICAL_DATA } from '../mutations-types';
+import { CHANGE_MEDICALS_DATA, CHANGE_MEDICAL_DATA, CHANGE_ERROR_DATA } from '../mutations-types';
 import MedicalService from '@/services/medicals';
 
 const formatPhone = phone => {
@@ -36,6 +36,9 @@ const getters = {
 };
 
 const mutations = {
+  [CHANGE_ERROR_DATA](state, value) {
+    state.error = value;
+  },
   [CHANGE_MEDICALS_DATA](state, value) {
     state.medicals = value;
   },
@@ -51,6 +54,7 @@ const actions = {
       commit(CHANGE_MEDICALS_DATA, response.data);
     } catch (error) {
       commit(CHANGE_MEDICALS_DATA, []);
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to list medicals... ${Date.now()}`);
       console.log('Não foi possível carregar os dados da API!', error);
     }
   },
@@ -60,14 +64,16 @@ const actions = {
       commit(CHANGE_MEDICAL_DATA, response.data);
     } catch (error) {
       commit(CHANGE_MEDICAL_DATA, {});
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to get medical... ${Date.now()}`);
       console.log('Não foi possível carregar os dados da API!', error);
     }
   },
-  async removeMedical({ dispatch }, id) {
+  async removeMedical({ commit, dispatch }, id) {
     try {
       const response = await MedicalService.deleteMedical(id);
       if (response.status === 204) dispatch('getMedicals');
     } catch (error) {
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to remove medical... ${Date.now()}`);
       console.log('Não foi possível apagar o dado na API!', error);
     }
   },
@@ -77,22 +83,25 @@ const actions = {
       commit(CHANGE_MEDICALS_DATA, response.data);
     } catch (error) {
       commit(CHANGE_MEDICALS_DATA, []);
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to search medical... ${Date.now()}`);
       console.log('Não foi possível encontrar os dados na API!', error);
     }
   },
-  async setMedical({ dispatch }, data) {
+  async setMedical({ commit, dispatch }, data) {
     try {
       const response = await MedicalService.setMedical(data);
       if (response.status === 201) dispatch('getMedicals');
     } catch (error) {
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to save medical... ${Date.now()}`);
       console.log('Não foi possível salvar os dados na API!', error);
     }
   },
-  async updateMedical({ dispatch }, data) {
+  async updateMedical({ commit, dispatch }, data) {
     try {
       const response = await MedicalService.updateMedical(data);
       if (response.status === 201) dispatch('getMedicals');
     } catch (error) {
+      commit(CHANGE_ERROR_DATA, `Oops! Something went wrong trying to update medical... ${Date.now()}`);
       console.log('Não foi possível atualizar os dados na API!', error);
     }
   },
@@ -101,6 +110,7 @@ const actions = {
 const state = {
   medicals: [],
   medical: {},
+  error: '',
 };
 
 export default {
