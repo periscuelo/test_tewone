@@ -18,7 +18,7 @@ const actions = {
   async getSpecialties({ commit }) {
     try {
       const response = await SpecialtyService.getSpecialties();
-      commit(CHANGE_SPECIALTY_DATA, response.data.body);
+      commit(CHANGE_SPECIALTY_DATA, response.data);
     } catch (error) {
       console.log('Não foi possível carregar os dados da API!', error);
     }
